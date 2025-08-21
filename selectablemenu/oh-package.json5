@@ -1,0 +1,23 @@
+{
+  "name": "selectablemenu",
+  "version": "1.0.0",
+  "description": "鸿蒙文本选择菜单，用于聊天消息文本选择复制",
+  "main": "Index.ets",
+  "author": "@仙银",
+  "homepage": "https://github.com/iHongRen",
+  "repository": "https://github.com/iHongRen/SelectableMenu",
+  "license": "Apache-2.0",
+  "keywords": [
+    "chat",
+    "SelectableMenu",
+    "menu",
+    "copy",
+    "select",
+    "text",
+    "菜单",
+    "选择",
+    "文本",
+    "复制"
+  ],
+  "dependencies": {}
+}
