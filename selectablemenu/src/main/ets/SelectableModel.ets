@@ -5,18 +5,47 @@
  * @description : 数据模型
  */
 
+
+export class SelectableMenuItem {
+  title: string = ''
+  icon: ResourceStr = ''
+  action?: () => void
+}
+
 @Observed
 export class SelectableModel {
-  _selectionStart: number = -1
-  _selectionEnd: number = -1
-  _longpressPopup: boolean = false
-  onTextSelectionChange?: (selectionStart: number, selectionEnd: number) => void
+  public static onPageTap?: (event: GestureEvent) => void
+  public selectionStart: number = -1
+  public selectionEnd: number = -1
+  public longpressPopup: boolean = false
+  public onTextSelectionChange?: (start: number, end: number) => void
 
-  canCopy() {
+  public canCopy() {
     return true
   }
 
-  copyText(): string {
+  public copyText(): string {
     return ''
+  }
+
+  public getMenus(): SelectableMenuItem[] {
+    const menus: SelectableMenuItem[] = []
+    menus.push({
+      title: '多选',
+      icon: '',
+      action: () => {
+
+      }
+    })
+    return menus
+  }
+
+  afterAction() {
+    if (!this.canCopy()) {
+      this.longpressPopup = false
+      this.selectionStart = -1
+      this.selectionEnd = -1
+      // ChatMsgEmitter.emit(ChatMsgEventName.MsgChanged, wrap.item.msg)
+    }
   }
 }

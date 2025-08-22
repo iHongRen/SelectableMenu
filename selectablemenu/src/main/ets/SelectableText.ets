@@ -7,7 +7,6 @@
 
 
 import { LengthMetrics } from '@kit.ArkUI'
-import { SelectableManager } from './SelectableManager'
 import { SelectableMenu } from './SelectableMenu'
 import { SelectableModel } from './SelectableModel'
 
@@ -58,7 +57,7 @@ export struct SelectableText {
   }
 
   showMenuPopup() {
-    SelectableManager.shared.onPageClick = (event: GestureEvent) => {
+    SelectableModel.onPageTap = (event: GestureEvent) => {
       if (this.msgArea && this.start >= 0 && this.end >= 0 && event.fingerList?.length > 0) {
         const x = event.fingerList[0].globalX
         const y = event.fingerList[0].globalY
@@ -76,7 +75,7 @@ export struct SelectableText {
   hideMenuPopup() {
     this.showPopup = false
     clearTimeout(this.timeout)
-    SelectableManager.shared.onPageClick = undefined
+    SelectableModel.onPageTap = undefined
     this.lastHideTime = new Date().getTime()
   }
 
@@ -95,8 +94,8 @@ export struct SelectableText {
   }
 
   selectChange(selectionStart: number, selectionEnd: number) {
-    this.model._selectionStart = selectionStart
-    this.model._selectionEnd = selectionEnd
+    this.model.selectionStart = selectionStart
+    this.model.selectionEnd = selectionEnd
     this.start = selectionStart
     this.end = selectionEnd
     this.model.onTextSelectionChange?.(selectionStart, selectionEnd)

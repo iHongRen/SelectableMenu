@@ -4,20 +4,8 @@
  * @date : 2025/8/21
  * @description : 弹出菜单
  */
-import { SelectableModel } from "./SelectableModel"
+import { SelectableMenuItem, SelectableModel } from "./SelectableModel"
 
-
-export class SelectableMenuItem {
-  title: string = ''
-  icon: ResourceStr = ''
-  action?: () => void
-  data?: SelectableModel
-}
-
-
-interface ItemWrap {
-  item: SelectableMenuItem
-}
 
 @Component
 export struct SelectableMenu {
@@ -25,25 +13,26 @@ export struct SelectableMenu {
   @State menus: SelectableMenuItem[] = []
   @State columnsTemplate: string = ''
   @State gridWidth: number = 0
+  @Prop gridItemWidth: number = 50
 
   aboutToAppear(): void {
     this.configMenus()
-    this.model.onTextSelectionChange = (selectionStart: number, selectionEnd: number) => {
+    this.model.onTextSelectionChange = (start: number, end: number) => {
       this.configMenus()
     }
   }
 
   configMenus() {
-    // this.menus = MsgPopupHelper.getMsgMenus(this.msg)
+    this.menus = this.model.getMenus()
     const columnCount = Math.min(5, this.menus.length)
-    this.gridWidth = columnCount * 50
+    this.gridWidth = columnCount * this.gridItemWidth
     this.columnsTemplate = '1fr '.repeat(columnCount).trimEnd()
   }
 
   build() {
     Grid() {
       ForEach(this.menus, (item: SelectableMenuItem) => {
-        this.menuItemBuilder({ item: item })
+        this.menuItemBuilder(item)
       }, (item: SelectableMenuItem) => item.title)
     }
     .columnsTemplate(this.columnsTemplate)
@@ -52,22 +41,16 @@ export struct SelectableMenu {
   }
 
   @Builder
-  menuItemBuilder(wrap: ItemWrap) {
+  menuItemBuilder(item: SelectableMenuItem) {
     GridItem() {
       Column({ space: 5 }) {
-        Image(wrap.item.icon).width(16).height(16).objectFit(ImageFit.Contain)
-        Text(wrap.item.title).fontSize(11).fontColor('#fff')
+        Image(item.icon).width(16).height(16).objectFit(ImageFit.Contain)
+        Text(item.title).fontSize(11).fontColor('#fff')
       }
-      .width(50)
+      .width(this.gridItemWidth)
       .padding({ top: 10, bottom: 10 })
       .onClick(() => {
-        wrap.item.action?.()
-        if (wrap.item.data && !wrap.item.data.canCopy()) {
-          wrap.item.data._longpressPopup = false
-          wrap.item.data._selectionStart = -1
-          wrap.item.data._selectionEnd = -1
-          // ChatMsgEmitter.emit(ChatMsgEventName.MsgChanged, wrap.item.msg)
-        }
+        item.action?.()
       })
     }
   }
