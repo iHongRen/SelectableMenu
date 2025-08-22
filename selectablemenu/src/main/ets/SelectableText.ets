@@ -24,16 +24,15 @@ export struct SelectableText {
 
   aboutToAppear(): void {
     this.cancelSelect()
-    // this.model.onMenuItemClick = (type: string) => {
-    //   const delay = (type === ChatMsgEventName.SelectAll || ChatMsgEventName.Copy) ? 50 : 0
-    //   setTimeout(() => {
-    //     if (type === ChatMsgEventName.SelectAll) {
-    //       this.selectAll()
-    //     } else {
-    //       this.cancelSelect()
-    //     }
-    //   }, delay)
-    // }
+    this.model.onMenuItemClick = (isSelectAll: boolean = false, delay: number = 0) => {
+      setTimeout(() => {
+        if (isSelectAll) {
+          this.selectAll()
+        } else {
+          this.cancelSelect()
+        }
+      }, delay)
+    }
   }
 
   cancelSelect() {
@@ -63,9 +62,11 @@ export struct SelectableText {
         const y = event.fingerList[0].globalY
 
         if (!this.isPointInComponent(x, y)) {
-          this.start = -1
-          this.end = 0
-          this.hideMenuPopup()
+          // this.start = -1
+          // this.end = 0
+          // this.hideMenuPopup()
+
+          this.cancelSelect()
         }
       }
     }
@@ -75,7 +76,7 @@ export struct SelectableText {
   hideMenuPopup() {
     this.showPopup = false
     clearTimeout(this.timeout)
-    SelectableModel.onPageTap = undefined
+    // SelectableModel.onPageTap = undefined
     this.lastHideTime = new Date().getTime()
   }
 
@@ -83,7 +84,6 @@ export struct SelectableText {
     if (!this.msgArea) {
       return false
     }
-
     const w = this.msgArea.width as number
     const h = this.msgArea.height as number
     const left = this.msgArea.globalPosition.x as number
@@ -125,9 +125,9 @@ export struct SelectableText {
       }
     })
     .bindPopup(this.showPopup, {
-      builder: this.menuPopup(), // 气泡的内容
-      placement: Placement.Top, // 气泡的弹出位置
-      popupColor: '#e6000000', // 气泡的背景色
+      builder: this.menuPopup(),
+      placement: Placement.Top,
+      popupColor: '#e6000000',
       backgroundBlurStyle: BlurStyle.NONE,
       radius: 5,
       mask: false,

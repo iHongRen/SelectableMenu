@@ -19,6 +19,7 @@ export class SelectableModel {
   public selectionEnd: number = -1
   public longpressPopup: boolean = false
   public onTextSelectionChange?: (start: number, end: number) => void
+  public onMenuItemClick?: (isSelectAll?: boolean, delay?: number) => void
 
   public canCopy() {
     return true
@@ -30,13 +31,6 @@ export class SelectableModel {
 
   public getMenus(): SelectableMenuItem[] {
     const menus: SelectableMenuItem[] = []
-    menus.push({
-      title: '多选',
-      icon: '',
-      action: () => {
-
-      }
-    })
     return menus
   }
 
