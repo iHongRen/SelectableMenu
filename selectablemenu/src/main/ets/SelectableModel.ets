@@ -21,25 +21,18 @@ export class SelectableModel {
   public onTextSelectionChange?: (start: number, end: number) => void
   public onMenuItemClick?: (isSelectAll?: boolean, delay?: number) => void
 
+  // 需要子类覆盖实现
   public canCopy() {
-    return true
+    return false
   }
 
+  // 需要子类覆盖实现
   public copyText(): string {
     return ''
   }
 
+  // 需要子类覆盖实现
   public getMenus(): SelectableMenuItem[] {
-    const menus: SelectableMenuItem[] = []
-    return menus
-  }
-
-  afterAction() {
-    if (!this.canCopy()) {
-      this.longpressPopup = false
-      this.selectionStart = -1
-      this.selectionEnd = -1
-      // ChatMsgEmitter.emit(ChatMsgEventName.MsgChanged, wrap.item.msg)
-    }
+    return []
   }
 }

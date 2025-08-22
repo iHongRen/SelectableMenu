@@ -14,6 +14,8 @@ import { SelectableModel } from './SelectableModel'
 @Component
 export struct SelectableText {
   @ObjectLink model: SelectableModel
+  @Prop caretColor: ResourceColor
+  @Prop selectedBackgroundColor: ResourceColor
   @BuilderParam slot: () => void
   @State showPopup: boolean = false
   @State start: number = -1
@@ -62,10 +64,6 @@ export struct SelectableText {
         const y = event.fingerList[0].globalY
 
         if (!this.isPointInComponent(x, y)) {
-          // this.start = -1
-          // this.end = 0
-          // this.hideMenuPopup()
-
           this.cancelSelect()
         }
       }
@@ -105,6 +103,8 @@ export struct SelectableText {
     Text() {
       this.slot()
     }
+    .caretColor(this.caretColor)
+    .selectedBackgroundColor(this.selectedBackgroundColor)
     .lineSpacing(LengthMetrics.vp(6))
     .copyOption(CopyOptions.LocalDevice)
     .selection(this.start, this.end)
