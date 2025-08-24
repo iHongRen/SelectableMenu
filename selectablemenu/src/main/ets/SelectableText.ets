@@ -14,9 +14,43 @@ import { SelectableModel } from './SelectableModel'
 @Component
 export struct SelectableText {
   @ObjectLink model: SelectableModel
+  @Prop text: string
+  @Prop textAlign: TextAlign
+  @Prop textOverflow: TextOverflowOptions
+  @Prop maxLines: number
+  @Prop lineHeight: number | string | Resource
+  @Prop decoration: DecorationStyleInterface
+  @Prop baselineOffset: number | string
+  @Prop letterSpacing: number | string
+  @Prop minFontSize: number | string | Resource
+  @Prop maxFontSize: number | string | Resource
+  @Prop fontColor: ResourceColor
+  @Prop fontSize: number | string | Resource
+  @Prop fontStyle: FontStyle
+  @Prop fontWeight: FontWeight
+  @Prop fontSettingOptions: FontSettingOptions
+  @Prop fontFamily: string | Resource
+  @Prop textDraggable: boolean // = draggable
+  @Prop textShadow: ShadowOptions | Array<ShadowOptions>
+  @Prop heightAdaptivePolicy: TextHeightAdaptivePolicy
+  @Prop textIndent: Length
+  @Prop wordBreak: WordBreak
+  @Prop ellipsisMode: EllipsisMode
+  @Prop enableDataDetector: boolean
+  @Prop dataDetectorConfig: TextDataDetectorConfig
+  @Prop fontFeature: string
+  @Prop lineSpacing?: LengthMetrics
+  @Prop privacySensitive: boolean
+  @Prop lineBreakStrategy: LineBreakStrategy
+  @Prop minFontScale: number | Resource
+  @Prop maxFontScale: number | Resource
+  @Prop halfLeading: boolean
+  @Prop enableHapticFeedback: boolean
   @Prop caretColor: ResourceColor
   @Prop selectedBackgroundColor: ResourceColor
-  @BuilderParam slot: () => void
+  @Prop textModifier?: AttributeModifier<TextAttribute> //其他属性或高版本的可通过它设置
+  controller?: TextController
+  @BuilderParam childrenComponent: () => void //子组件,可以包含Span、ImageSpan、SymbolSpan和ContainerSpan
   @State showPopup: boolean = false
   @State start: number = -1
   @State end: number = 0
@@ -58,23 +92,26 @@ export struct SelectableText {
   }
 
   showMenuPopup() {
-    SelectableModel.onPageTap = (event: GestureEvent) => {
-      if (this.msgArea && this.start >= 0 && this.end >= 0 && event.fingerList?.length > 0) {
+    SelectableModel.onPageTap = (event?: BaseGestureEvent) => {
+      if (event && this.msgArea && this.start >= 0 && this.end >= 0 && event.fingerList?.length > 0) {
         const x = event.fingerList[0].globalX
         const y = event.fingerList[0].globalY
 
         if (!this.isPointInComponent(x, y)) {
           this.cancelSelect()
         }
+      } else if (!event) {
+        this.cancelSelect()
       }
     }
+
     this.showPopup = true
   }
 
   hideMenuPopup() {
     this.showPopup = false
     clearTimeout(this.timeout)
-    // SelectableModel.onPageTap = undefined
+    SelectableModel.onPageTap = undefined
     this.lastHideTime = new Date().getTime()
   }
 
@@ -100,12 +137,38 @@ export struct SelectableText {
   }
 
   build() {
-    Text() {
-      this.slot()
+    Text(this.text, { controller: this.controller }) {
+      this.childrenComponent?.()
     }
+    .textAlign(this.textAlign)
+    .textOverflow(this.textOverflow)
+    .maxLines(this.maxLines)
+    .lineHeight(this.lineHeight)
+    .decoration(this.decoration)
+    .baselineOffset(this.baselineOffset)
+    .letterSpacing(this.letterSpacing)
+    .minFontSize(this.minFontSize)
+    .maxFontSize(this.maxFontSize)
+    .fontColor(this.fontColor)
+    .fontSize(this.fontSize)
+    .fontStyle(this.fontStyle)
+    .fontWeight(this.fontWeight, this.fontSettingOptions)
+    .fontFamily(this.fontFamily)
+    .draggable(this.textDraggable)
+    .textShadow(this.textShadow)
+    .heightAdaptivePolicy(this.heightAdaptivePolicy)
+    .textIndent(this.textIndent)
+    .wordBreak(this.wordBreak)
+    .ellipsisMode(this.ellipsisMode)
+    .enableDataDetector(this.enableDataDetector)
+    .dataDetectorConfig(this.dataDetectorConfig)
+    .fontFeature(this.fontFeature)
+    .lineSpacing(this.lineSpacing)
+    .privacySensitive(this.privacySensitive)
+    .lineBreakStrategy(this.lineBreakStrategy)
+    .enableHapticFeedback(this.enableHapticFeedback)
     .caretColor(this.caretColor)
     .selectedBackgroundColor(this.selectedBackgroundColor)
-    .lineSpacing(LengthMetrics.vp(6))
     .copyOption(CopyOptions.LocalDevice)
     .selection(this.start, this.end)
     .onTextSelectionChange((selectionStart: number, selectionEnd: number) => {
@@ -151,6 +214,7 @@ export struct SelectableText {
     .onAreaChange((oldValue: Area, newValue: Area) => {
       this.msgArea = newValue
     })
+    .attributeModifier(this.textModifier)
   }
 
   @Builder

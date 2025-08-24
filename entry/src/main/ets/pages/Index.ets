@@ -1,4 +1,4 @@
-import { SelectableMenuItem, SelectableModel, SelectableText } from '@cxy/selecteablemenu'
+import { SelectableMenu, SelectableMenuItem, SelectableModel, SelectableText } from '@cxy/selecteablemenu'
 
 enum MsgType {
   Text = 0,
@@ -95,11 +95,21 @@ class MyItem extends SelectableModel {
   }
 }
 
+@Observed
+export class ObservedArray<T> extends Array<T> {
+  constructor(args?: T[]) {
+    if (args instanceof Array) {
+      super(...args);
+    } else {
+      super();
+    }
+  }
+}
 
 @Entry
 @Component
 struct Index {
-  @State list: MyItem[] = []
+  @State list: ObservedArray<MyItem> = new ObservedArray()
   private pageStack: NavPathStack = new NavPathStack()
 
   aboutToAppear(): void {
@@ -114,17 +124,21 @@ struct Index {
     const item2 = new MyItem()
     item1.id = 2
     item2.text =
-      '大师傅额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭答凯撒了哈饭卡打撒达说法打撒放大时范德萨范德萨'
+      `大师傅额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭答凯撒了哈饭卡打撒达说法打撒放大时范德萨范德萨`
 
     const item3 = new MyItem()
     item3.id = 3
     item3.type = MsgType.Image
     item3.img = $r('app.media.avatar')
 
+    const item4 = new MyItem()
+    item4.id = 4
+    item4.text = 'Hello, SelectableMenu !'
 
     this.list.push(item1)
     this.list.push(item2)
     this.list.push(item3)
+    this.list.push(item4)
   }
 
   build() {
@@ -147,8 +161,12 @@ struct Index {
               .padding(15)
 
             } else if (item.type === MsgType.Image) {
-              Image(item.img)
-                .width(200)
+              MenuPopupContainer({
+                model: item
+              }) {
+                Image(item.img)
+                  .width(200)
+              }
             }
           }
           .padding(15)
@@ -156,6 +174,7 @@ struct Index {
       }
       .backgroundColor('#f0f0f0')
       .layoutWeight(1)
+
     }
     .title('文本选择菜单Demo')
     .titleMode(NavigationTitleMode.Mini)
@@ -166,5 +185,43 @@ struct Index {
           SelectableModel.onPageTap?.(event)
         })
     )
+
+  }
+}
+
+@Component
+struct MenuPopupContainer {
+  @BuilderParam child: () => void
+  @ObjectLink model: SelectableModel
+
+  build() {
+    Row() {
+      this.child?.()
+    }
+    .bindPopup(this.model.longpressPopup, {
+      builder: this.menuPopup(),
+      placement: Placement.Top,
+      popupColor: '#e6000000',
+      backgroundBlurStyle: BlurStyle.NONE,
+      radius: 5,
+      onStateChange: (e) => {
+        if (!e.isVisible) {
+          this.model.longpressPopup = false
+        }
+      }
+    })
+    .priorityGesture(
+      LongPressGesture()
+        .onAction((event: GestureEvent) => {
+          if (event) {
+            this.model.longpressPopup = true
+          }
+        })
+    )
+  }
+
+  @Builder
+  menuPopup() {
+    SelectableMenu({ model: this.model })
   }
 }

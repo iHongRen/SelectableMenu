@@ -14,7 +14,7 @@ export class SelectableMenuItem {
 
 @Observed
 export class SelectableModel {
-  public static onPageTap?: (event: GestureEvent) => void
+  public static onPageTap?: (event: BaseGestureEvent) => void
   public selectionStart: number = -1
   public selectionEnd: number = -1
   public longpressPopup: boolean = false
