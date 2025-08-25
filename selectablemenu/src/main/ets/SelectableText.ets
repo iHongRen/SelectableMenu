@@ -10,7 +10,6 @@ import { LengthMetrics } from '@kit.ArkUI'
 import { SelectableMenu } from './SelectableMenu'
 import { SelectableModel } from './SelectableModel'
 
-
 @Component
 export struct SelectableText {
   @ObjectLink model: SelectableModel
@@ -39,7 +38,7 @@ export struct SelectableText {
   @Prop enableDataDetector: boolean
   @Prop dataDetectorConfig: TextDataDetectorConfig
   @Prop fontFeature: string
-  @Prop lineSpacing?: LengthMetrics
+  @Prop lineSpacing: LengthMetrics = LengthMetrics.vp(5)
   @Prop privacySensitive: boolean
   @Prop lineBreakStrategy: LineBreakStrategy
   @Prop minFontScale: number | Resource
@@ -48,19 +47,23 @@ export struct SelectableText {
   @Prop enableHapticFeedback: boolean
   @Prop caretColor: ResourceColor
   @Prop selectedBackgroundColor: ResourceColor
-  @Prop textModifier?: AttributeModifier<TextAttribute> //其他属性或高版本的可通过它设置
+  @State textModifier: AttributeModifier<TextAttribute> | undefined = undefined //其他属性或高版本API的可通过它设置
   controller?: TextController
-  @BuilderParam childrenComponent: () => void //子组件,可以包含Span、ImageSpan、SymbolSpan和ContainerSpan
+  @BuilderParam childComponent: () => void //子组件,可以包含Span、ImageSpan、SymbolSpan和ContainerSpan
+  @Prop popupColor: ResourceColor = '#e6000000'
+  @Prop popupRadius: number = 5
+  @Prop placement: Placement = Placement.Top
+  ///////////// 下面的作为私有属性 ////////////////////////////////////////////////////////////
   @State showPopup: boolean = false
   @State start: number = -1
   @State end: number = 0
   private timeout: number = 0
   private lastHideTime: number = 0
-  private msgArea?: Area
+  private myArea?: Area
 
   aboutToAppear(): void {
     this.cancelSelect()
-    this.model.onMenuItemClick = (isSelectAll: boolean = false, delay: number = 0) => {
+    this.model.onDidMenuItem = (isSelectAll: boolean = false, delay: number = 0) => {
       setTimeout(() => {
         if (isSelectAll) {
           this.selectAll()
@@ -93,7 +96,7 @@ export struct SelectableText {
 
   showMenuPopup() {
     SelectableModel.onPageTap = (event?: BaseGestureEvent) => {
-      if (event && this.msgArea && this.start >= 0 && this.end >= 0 && event.fingerList?.length > 0) {
+      if (event && this.myArea && this.start >= 0 && this.end >= 0 && event.fingerList?.length > 0) {
         const x = event.fingerList[0].globalX
         const y = event.fingerList[0].globalY
 
@@ -111,19 +114,18 @@ export struct SelectableText {
   hideMenuPopup() {
     this.showPopup = false
     clearTimeout(this.timeout)
-    SelectableModel.onPageTap = undefined
     this.lastHideTime = new Date().getTime()
   }
 
   isPointInComponent(x: number, y: number): boolean {
-    if (!this.msgArea) {
+    if (!this.myArea) {
       return false
     }
-    const w = this.msgArea.width as number
-    const h = this.msgArea.height as number
-    const left = this.msgArea.globalPosition.x as number
+    const w = this.myArea.width as number
+    const h = this.myArea.height as number
+    const left = this.myArea.globalPosition.x as number
     const right = left + w
-    const top = this.msgArea.globalPosition.y as number
+    const top = this.myArea.globalPosition.y as number
     const bottom = top + h
     return x >= left && x <= right && y >= top && y <= bottom
   }
@@ -138,7 +140,7 @@ export struct SelectableText {
 
   build() {
     Text(this.text, { controller: this.controller }) {
-      this.childrenComponent?.()
+      this.childComponent?.()
     }
     .textAlign(this.textAlign)
     .textOverflow(this.textOverflow)
@@ -189,10 +191,10 @@ export struct SelectableText {
     })
     .bindPopup(this.showPopup, {
       builder: this.menuPopup(),
-      placement: Placement.Top,
-      popupColor: '#e6000000',
+      placement: this.placement,
+      popupColor: this.popupColor,
       backgroundBlurStyle: BlurStyle.NONE,
-      radius: 5,
+      radius: this.popupRadius,
       mask: false,
       onStateChange: (e) => {
         if (!e.isVisible) {
@@ -212,7 +214,7 @@ export struct SelectableText {
           })
       ))
     .onAreaChange((oldValue: Area, newValue: Area) => {
-      this.msgArea = newValue
+      this.myArea = newValue
     })
     .attributeModifier(this.textModifier)
   }

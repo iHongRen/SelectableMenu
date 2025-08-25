@@ -1,4 +1,6 @@
-import { SelectableMenu, SelectableMenuItem, SelectableModel, SelectableText } from '@cxy/selecteablemenu'
+import {
+  MenuContainer, SelectableMenuItem, SelectableModel, SelectableText
+} from '@cxy/selecteablemenu'
 
 enum MsgType {
   Text = 0,
@@ -13,6 +15,11 @@ class MyItem extends SelectableModel {
   type: MsgType = MsgType.Text
   text: string = ''
   img: ResourceStr = ''
+
+  constructor(id: number) {
+    super()
+    this.id = id
+  }
 
   // 覆盖父类方法
   public canCopy() {
@@ -36,7 +43,7 @@ class MyItem extends SelectableModel {
           // TODO： 处理复制逻辑
           // const text = this.copyText()
           // ...
-          this.onMenuItemClick?.(false, 50)
+          this.onDidMenuItem?.(false, 50)
         }
       })
     }
@@ -47,7 +54,7 @@ class MyItem extends SelectableModel {
         title: '全选',
         icon: $r("app.media.edit"),
         action: () => {
-          this.onMenuItemClick?.(true, 50)
+          this.onDidMenuItem?.(true, 50)
         }
       })
     }
@@ -58,16 +65,17 @@ class MyItem extends SelectableModel {
       action: () => {
         // TODO： 处理对应逻辑
         // ...
-        this.onMenuItemClick?.()
+        this.onDidMenuItem?.()
       }
     })
+
     menus.push({
       title: '收藏',
       icon: $r("app.media.favor"),
       action: () => {
         // TODO： 处理对应逻辑
         // ...
-        this.onMenuItemClick?.()
+        this.onDidMenuItem?.()
       }
     })
 
@@ -77,7 +85,7 @@ class MyItem extends SelectableModel {
       action: () => {
         // TODO： 处理对应逻辑
         // ...
-        this.onMenuItemClick?.()
+        this.onDidMenuItem?.()
       }
     })
 
@@ -87,7 +95,7 @@ class MyItem extends SelectableModel {
       action: () => {
         // TODO： 处理对应逻辑
         // ...
-        this.onMenuItemClick?.()
+        this.onDidMenuItem?.()
       }
     })
 
@@ -95,21 +103,10 @@ class MyItem extends SelectableModel {
   }
 }
 
-@Observed
-export class ObservedArray<T> extends Array<T> {
-  constructor(args?: T[]) {
-    if (args instanceof Array) {
-      super(...args);
-    } else {
-      super();
-    }
-  }
-}
-
 @Entry
 @Component
 struct Index {
-  @State list: ObservedArray<MyItem> = new ObservedArray()
+  @State list: Array<MyItem> = new Array()
   private pageStack: NavPathStack = new NavPathStack()
 
   aboutToAppear(): void {
@@ -117,28 +114,28 @@ struct Index {
   }
 
   initData() {
-    const item1 = new MyItem()
-    item1.id = 1
+    const item1 = new MyItem(1)
     item1.text = '鸿蒙文本选择菜单，用于聊天消息文本选择复制'
 
-    const item2 = new MyItem()
-    item1.id = 2
-    item2.text =
-      `大师傅额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭答凯撒了哈饭卡打撒达说法打撒放大时范德萨范德萨`
+    const item2 = new MyItem(2)
+    item2.text = `长按默认选中全部，可自定义选中颜色`
 
-    const item3 = new MyItem()
-    item3.id = 3
+    const item3 = new MyItem(3)
     item3.type = MsgType.Image
-    item3.img = $r('app.media.avatar')
+    item3.img = $r('app.media.foreground')
 
-    const item4 = new MyItem()
-    item4.id = 4
+    const item4 = new MyItem(4)
     item4.text = 'Hello, SelectableMenu !'
+
+    const item5 = new MyItem(5)
+    item5.text =
+      `大师傅额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭额外企鹅企鹅万福范德萨范德萨甲方客户端洒基开发和解答凯撒了哈饭答凯撒了哈饭卡打撒达说法打撒放大时范德萨范德萨`
 
     this.list.push(item1)
     this.list.push(item2)
     this.list.push(item3)
     this.list.push(item4)
+    this.list.push(item5)
   }
 
   build() {
@@ -149,23 +146,22 @@ struct Index {
             if (item.type === MsgType.Text) {
               Column() {
                 SelectableText({
-                  model: item
-                }) {
-                  Span(item.text)
-                    .fontSize(15)
-                    .fontColor('#33')
-                }
+                  model: item,
+                  text: item.text,
+                  caretColor: '#f00',
+                  selectedBackgroundColor: '#33ff0000'
+                })
               }
               .backgroundColor('#fff')
               .borderRadius(10)
               .padding(15)
 
             } else if (item.type === MsgType.Image) {
-              MenuPopupContainer({
+              MenuContainer({
                 model: item
               }) {
                 Image(item.img)
-                  .width(200)
+                  .width(150)
               }
             }
           }
@@ -174,7 +170,6 @@ struct Index {
       }
       .backgroundColor('#f0f0f0')
       .layoutWeight(1)
-
     }
     .title('文本选择菜单Demo')
     .titleMode(NavigationTitleMode.Mini)
@@ -185,43 +180,6 @@ struct Index {
           SelectableModel.onPageTap?.(event)
         })
     )
-
   }
 }
 
-@Component
-struct MenuPopupContainer {
-  @BuilderParam child: () => void
-  @ObjectLink model: SelectableModel
-
-  build() {
-    Row() {
-      this.child?.()
-    }
-    .bindPopup(this.model.longpressPopup, {
-      builder: this.menuPopup(),
-      placement: Placement.Top,
-      popupColor: '#e6000000',
-      backgroundBlurStyle: BlurStyle.NONE,
-      radius: 5,
-      onStateChange: (e) => {
-        if (!e.isVisible) {
-          this.model.longpressPopup = false
-        }
-      }
-    })
-    .priorityGesture(
-      LongPressGesture()
-        .onAction((event: GestureEvent) => {
-          if (event) {
-            this.model.longpressPopup = true
-          }
-        })
-    )
-  }
-
-  @Builder
-  menuPopup() {
-    SelectableMenu({ model: this.model })
-  }
-}
