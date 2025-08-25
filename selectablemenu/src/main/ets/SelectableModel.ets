@@ -5,7 +5,6 @@
  * @description : 数据模型
  */
 
-
 export class SelectableMenuItem {
   title: string = ''
   icon: ResourceStr = ''
