@@ -18,7 +18,6 @@ export class SelectableModel {
   public selectionStart: number = -1
   public selectionEnd: number = -1
   public longpressPopup: boolean = false
-  public onTextSelectionChange?: (start: number, end: number) => void
   public onDidMenuItem?: (isSelectAll?: boolean, delay?: number) => void
 
   // 需要子类覆盖实现

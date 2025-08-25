@@ -102,9 +102,11 @@ export struct SelectableText {
 
         if (!this.isPointInComponent(x, y)) {
           this.cancelSelect()
+          SelectableModel.onPageTap = undefined
         }
       } else if (!event) {
         this.cancelSelect()
+        SelectableModel.onPageTap = undefined
       }
     }
 
@@ -135,7 +137,6 @@ export struct SelectableText {
     this.model.selectionEnd = selectionEnd
     this.start = selectionStart
     this.end = selectionEnd
-    this.model.onTextSelectionChange?.(selectionStart, selectionEnd)
   }
 
   build() {

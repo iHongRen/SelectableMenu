@@ -10,34 +10,28 @@ import { SelectableMenuItem, SelectableModel } from "./SelectableModel"
 @Component
 export struct SelectableMenu {
   @ObjectLink model: SelectableModel
-  @State menus: SelectableMenuItem[] = []
-  @State columnsTemplate: string = ''
-  @State gridWidth: number = 0
   @Prop gridItemWidth: number = 50
-
-  aboutToAppear(): void {
-    this.configMenus()
-    this.model.onTextSelectionChange = (start: number, end: number) => {
-      this.configMenus()
-    }
-  }
-
-  configMenus() {
-    this.menus = this.model.getMenus()
-    const columnCount = Math.min(5, this.menus.length)
-    this.gridWidth = columnCount * this.gridItemWidth
-    this.columnsTemplate = '1fr '.repeat(columnCount).trimEnd()
-  }
+  @Prop maxColumnCount: number = 5
 
   build() {
     Grid() {
-      ForEach(this.menus, (item: SelectableMenuItem) => {
+      ForEach(this.model.getMenus(), (item: SelectableMenuItem) => {
         this.menuItemBuilder(item)
       }, (item: SelectableMenuItem) => item.title)
     }
-    .columnsTemplate(this.columnsTemplate)
-    .width(this.gridWidth)
-    .maxCount(this.menus.length)
+    .columnsTemplate(this.getColumnsTemplate())
+    .width(this.getGridWidth())
+    .maxCount(this.model.getMenus().length)
+  }
+
+  getGridWidth(): number {
+    const columnCount = Math.min(this.maxColumnCount, this.model.getMenus().length)
+    return columnCount * this.gridItemWidth
+  }
+
+  getColumnsTemplate(): string {
+    const columnCount = Math.min(this.maxColumnCount, this.model.getMenus().length)
+    return '1fr '.repeat(columnCount).trimEnd()
   }
 
   @Builder

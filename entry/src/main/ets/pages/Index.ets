@@ -147,9 +147,7 @@ struct Index {
               Column() {
                 SelectableText({
                   model: item,
-                  text: item.text,
-                  caretColor: '#f00',
-                  selectedBackgroundColor: '#33ff0000'
+                  text: item.text
                 })
               }
               .backgroundColor('#fff')
