@@ -55,7 +55,7 @@ class ChatMessage extends SelectableModel {
           // TODO: 调用系统复制API
           // ...
 
-          this.onDidMenuItem?.(false, 50)
+          this.onDidMenuItem?.(true)
         }
       })
     }
@@ -66,7 +66,7 @@ class ChatMessage extends SelectableModel {
         title: '全选',
         icon: $r("app.media.edit"),
         action: () => {
-          this.onDidMenuItem?.(true, 50)
+          this.onDidMenuItem?.(false, true)
         }
       })
     }

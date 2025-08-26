@@ -53,6 +53,8 @@ export struct SelectableText {
   @Prop popupColor: ResourceColor = '#e6000000'
   @Prop popupRadius: number = 5
   @Prop placement: Placement = Placement.Top
+  @Prop menuItemWidth: number = 50
+  @Prop maxColumnCount: number = 5
   ///////////// 下面的作为私有属性 ////////////////////////////////////////////////////////////
   @State showPopup: boolean = false
   @State start: number = -1
@@ -63,7 +65,8 @@ export struct SelectableText {
 
   aboutToAppear(): void {
     this.cancelSelect()
-    this.model.onDidMenuItem = (isSelectAll: boolean = false, delay: number = 0) => {
+    this.model.onDidMenuItem = (isCopy: boolean = false, isSelectAll: boolean = false) => {
+      const delay = isCopy || isSelectAll ? 50 : 0
       setTimeout(() => {
         if (isSelectAll) {
           this.selectAll()
@@ -241,7 +244,11 @@ export struct SelectableText {
 
   @Builder
   menuPopup() {
-    SelectableMenu({ model: this.model })
+    SelectableMenu({
+      model: this.model,
+      menuItemWidth: this.menuItemWidth,
+      maxColumnCount: this.maxColumnCount
+    })
   }
 }
 

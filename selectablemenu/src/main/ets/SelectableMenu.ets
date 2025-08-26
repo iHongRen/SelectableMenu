@@ -10,7 +10,7 @@ import { SelectableMenuItem, SelectableModel } from "./SelectableModel"
 @Component
 export struct SelectableMenu {
   @ObjectLink model: SelectableModel
-  @Prop gridItemWidth: number = 50
+  @Prop menuItemWidth: number = 50
   @Prop maxColumnCount: number = 5
 
   build() {
@@ -26,7 +26,7 @@ export struct SelectableMenu {
 
   getGridWidth(): number {
     const columnCount = Math.min(this.maxColumnCount, this.model.getMenus().length)
-    return columnCount * this.gridItemWidth
+    return columnCount * this.menuItemWidth
   }
 
   getColumnsTemplate(): string {
@@ -41,7 +41,7 @@ export struct SelectableMenu {
         Image(item.icon).width(16).height(16).objectFit(ImageFit.Contain)
         Text(item.title).fontSize(11).fontColor('#fff')
       }
-      .width(this.gridItemWidth)
+      .width(this.menuItemWidth)
       .padding({ top: 10, bottom: 10 })
       .onClick(() => {
         item.action?.()

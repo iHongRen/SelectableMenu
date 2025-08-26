@@ -14,6 +14,8 @@ export struct MenuContainer {
   @Prop popupColor: ResourceColor = '#e6000000'
   @Prop popupRadius: number = 5
   @Prop placement: Placement = Placement.Top
+  @Prop menuItemWidth: number = 50
+  @Prop maxColumnCount: number = 5
 
   aboutToAppear(): void {
     this.model.onDidMenuItem = () => {
@@ -52,6 +54,10 @@ export struct MenuContainer {
 
   @Builder
   menuPopup() {
-    SelectableMenu({ model: this.model })
+    SelectableMenu({
+      model: this.model,
+      menuItemWidth: this.menuItemWidth,
+      maxColumnCount: this.maxColumnCount
+    })
   }
 }
