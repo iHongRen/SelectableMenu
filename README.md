@@ -26,7 +26,7 @@ ohpm install @cxy/selecteablemenu
 }
 ```
 
-<a href="https://7up.pics/image/AUi540"><img src="https://7up.pics/images/2025/08/26/Screenshot_20250826103252967.jpeg" width=320></a>
+<img src="https://7up.pics/images/2025/08/26/Screenshot_20250826103252967.jpeg" width=320>
 
 ## 完整示例 - [查看demo](https://github.com/iHongRen/SelectableMenu)
 

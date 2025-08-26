@@ -26,7 +26,7 @@ ohpm install @cxy/selecteablemenu
 }
 ```
 
-<a href="https://7up.pics/image/AUi540"><img src="https://7up.pics/images/2025/08/26/Screenshot_20250826103252967.jpeg" width=320></a>
+<img src="https://7up.pics/images/2025/08/26/Screenshot_20250826103252967.jpeg" width=320>
 
 ## 完整示例 - [查看demo](https://github.com/iHongRen/SelectableMenu)
 
@@ -36,8 +36,8 @@ import {
 } from '@cxy/selecteablemenu'
 
 enum MessageType {
-  Text = 0,
-  Image = 1
+Text = 0,
+Image = 1
 }
 
 /**
@@ -152,16 +152,25 @@ class ChatMessage extends SelectableModel {
   }
 }
 
-@Entry
-@Component
-struct Index {
-  @State messages: Array<ChatMessage> = []
+@
+Entry
+@
+Component
+struct
+Index
+{
+  @
+  State
+  messages: Array<
+  ChatMessage > = []
 
-  aboutToAppear(): void {
+  aboutToAppear():
+  void {
     this.initMessages()
   }
 
-  initMessages() {
+  initMessages()
+  {
     const message1 = new ChatMessage(1)
     message1.text = '这是一条可以长按选择的文本消息'
 
@@ -203,15 +212,22 @@ struct Index {
     this.messages.push(message4)
   }
 
-  build() {
-    Navigation() {
-      List({ space: 12 }) {
+  build()
+  {
+    Navigation()
+    {
+      List
+      ({ space: 12 })
+      {
         ForEach(this.messages, (message: ChatMessage) => {
-          ListItem() {
+          ListItem()
+          {
             if (message.type === MessageType.Text) {
               // 文本消息
-              Column() {
-                SelectableText({
+              Column()
+              {
+                SelectableText
+                ({
                   model: message,
                   // text: message.text,
                   fontSize: 16,
@@ -219,21 +235,25 @@ struct Index {
                   caretColor: '#007AFF',
                   selectedBackgroundColor: '#33007AFF',
                   enableDataDetector: true
-                }) {
+                })
+                {
                   Span(message.text) //SelectableText子组件与Text的子组件一致
                 }
               }
-              .backgroundColor('#ffffff')
-              .borderRadius(12)
-              .padding(16)
-              .alignItems(HorizontalAlign.Start)
+              .
+              backgroundColor('#ffffff')
+                .borderRadius(12)
+                .padding(16)
+                .alignItems(HorizontalAlign.Start)
 
             } else if (message.type === MessageType.Image) {
               // 图片消息
-              MenuContainer({
+              MenuContainer
+              ({
                 model: message,
 
-              }) {
+              })
+              {
                 Image(message.imageUrl)
                   .width(150)
               }
@@ -242,24 +262,24 @@ struct Index {
 
         }, (message: ChatMessage) => message.id.toString())
       }
-      .backgroundColor('#f5f5f5')
-      .padding(15)
-      .layoutWeight(1)
+      .
+      backgroundColor('#f5f5f5')
+        .padding(15)
+        .layoutWeight(1)
     }
-    .title('聊天消息')
-    .titleMode(NavigationTitleMode.Mini)
-    .mode(NavigationMode.Stack)
-    .parallelGesture(
-      TapGesture()
-        .onAction((event) => {
-          SelectableModel.onPageTap?.(event)
-        })
-    )
+    .
+    title('聊天消息')
+      .titleMode(NavigationTitleMode.Mini)
+      .mode(NavigationMode.Stack)
+      .parallelGesture(
+        TapGesture()
+          .onAction((event) => {
+            SelectableModel.onPageTap?.(event)
+          })
+      )
   }
 }
 ```
-
-
 
 ## API 参考
 
@@ -267,14 +287,14 @@ struct Index {
 
 可选择文本组件，继承Text组件大部分属性并扩展文本选择功能，增加属性如下：
 
-| 属性          | 类型              | 默认值           | 说明      |
-|-------------|-----------------|---------------|---------|
-| model       | SelectableModel | -             | 数据模型实例  |
-| popupColor  | ResourceColor   | '#e6000000'   | 弹出菜单背景色 |
-| popupRadius | number          | 5             | 弹出菜单圆角  |
-| placement   | Placement       | Placement.Top | 弹出菜单位置  |
-| menuItemWidth  | number          | 50 (vp) | 菜单项的宽度   |
-| maxColumnCount | number          | 5       | 最大的显示列数 |
+| 属性             | 类型              | 默认值           | 说明      |
+|----------------|-----------------|---------------|---------|
+| model          | SelectableModel | -             | 数据模型实例  |
+| popupColor     | ResourceColor   | '#e6000000'   | 弹出菜单背景色 |
+| popupRadius    | number          | 5             | 弹出菜单圆角  |
+| placement      | Placement       | Placement.Top | 弹出菜单位置  |
+| menuItemWidth  | number          | 50 (vp)       | 菜单项的宽度  |
+| maxColumnCount | number          | 5             | 最大的显示列数 |
 
 ### MenuContainer
 
@@ -299,8 +319,6 @@ struct Index {
 | canCopy()  | boolean              | 是否可复制    |
 | copyText() | string               | 返回可复制的文本 |
 | getMenus() | SelectableMenuItem[] | 返回菜单项数组  |
-
-
 
 # 作者
 
