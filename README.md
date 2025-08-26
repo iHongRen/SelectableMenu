@@ -1,3 +1,41 @@
+# SelectableMenu - 鸿蒙文本选择菜单组件
+
+文本选择菜单组件，主要用于聊天对话框中的长按文本选择和操作功能。
+
+
+
+## 功能特性
+
+- 文本选择：支持长按选择文本
+- 自动全选：长按时默认选中全部文本内容  
+- 自定义菜单：支持自定义菜单项，包括图标、标题和操作
+
+  
+
+## 安装使用
+
+```bash
+ohpm install @cxy/selecteablemenu
+```
+或在项目 `oh-package.json5` 添加依赖，然后同步项目
+
+```json
+{
+  "dependencies": {
+    "@cxy/selecteablemenu": "^1.0.0"
+  }
+}
+```
+
+
+
+<a href="https://7up.pics/image/AUi540"><img src="https://7up.pics/images/2025/08/26/Screenshot_20250826103252967.jpeg" width=320></a>
+
+
+
+## 示例代码
+
+```typescript
 import {
   MenuContainer, SelectableMenuItem, SelectableModel, SelectableText
 } from '@cxy/selecteablemenu'
@@ -121,7 +159,7 @@ class ChatMessage extends SelectableModel {
 
 @Entry
 @Component
-struct Index {
+struct ChatPage {
   @State messages: Array<ChatMessage> = []
 
   aboutToAppear(): void {
@@ -198,8 +236,7 @@ struct Index {
             } else if (message.type === MessageType.Image) {
               // 图片消息
               MenuContainer({
-                model: message,
-
+                model: message
               }) {
                 Image(message.imageUrl)
                   .width(150)
@@ -224,3 +261,98 @@ struct Index {
     )
   }
 }
+```
+
+
+
+
+
+## API 参考
+
+### SelectableText 
+
+可选择文本组件，继承Text组件大部分属性并扩展文本选择功能，增加属性如下：
+
+| 属性 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| model | SelectableModel | - | 数据模型实例 |
+| popupColor | ResourceColor | '#e6000000' | 弹出菜单背景色 |
+| popupRadius | number | 5 | 弹出菜单圆角 |
+| placement | Placement | Placement.Top | 弹出菜单位置 |
+
+### MenuContainer 
+
+菜单容器组件，适用于**非文本选择**的组件，菜单配置属性如上。
+
+### SelectableModel 
+
+ 数据模型基类，需要继承实现，提供选择状态管理和事件回调，需要继承实现的抽象方法：
+
+| 方法 | 返回值 | 说明 |
+|------|--------|------|
+| canCopy() | boolean | 是否可复制 |
+| copyText() | string | 返回可复制的文本 |
+| getMenus() | SelectableMenuItem[] | 返回菜单项数组 |
+
+
+### SelectableMenu 
+
+ 弹出菜单组件，网格布局显示菜单项：
+
+| 属性 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| model | SelectableModel | - | 数据模型实例 |
+| gridItemWidth | number | 50 (vp) | 弹出菜单背景色 |
+| maxColumnCount | number | 5 | 最大的显示列数 |
+
+
+
+### 样式定制
+
+```typescript
+// 自定义选中样式
+SelectableText({
+  model: this.message,
+  text: this.message.text,
+  caretColor: '#FF6B6B',
+  selectedBackgroundColor: '#33FF6B6B',
+  fontSize: 18,
+  fontColor: '#2C3E50'
+})
+
+// 自定义菜单样式
+SelectableText({
+  model: this.message,
+  text: this.message.text,
+  popupColor: '#CC000000',
+  popupRadius: 12,
+  placement: Placement.Bottom
+})
+```
+
+
+
+
+# 作者
+
+[@仙银](https://github.com/iHongRen) 鸿蒙相关开源作品
+
+1、[hpack](https://github.com/iHongRen/hpack) - 鸿蒙内部测试分发，一键脚本打包工具
+
+2、[Open-in-DevEco-Studio](https://github.com/iHongRen/Open-in-DevEco-Studio)  - macOS 直接在 Finder 工具栏上，使用
+DevEco-Studio 打开鸿蒙工程。
+
+3、[cxy-theme](https://github.com/iHongRen/cxy-theme) - DevEco-Studio 绿色背景主题
+
+4、[harmony-udid-tool](https://github.com/iHongRen/harmony-udid-tool) -  简单易用的 HarmonyOS 设备 UDID 获取工具，适用于非开发人员。
+
+5、[SandboxFinder](https://github.com/iHongRen/SandboxFinder) - 鸿蒙沙箱文件浏览器
+
+6、[WebServer](https://github.com/iHongRen/WebServer) - 鸿蒙轻量级Web服务器框架
+
+7、[SelectableMenu](https://github.com/iHongRen/SelectableMenu) - 适用于聊天对话框中的文本选择菜单
+
+
+
+🌟 如果项目对你有帮助，欢迎持续关注和 Star ，[赞助](https://ihongren.github.io/donate.html)
+
