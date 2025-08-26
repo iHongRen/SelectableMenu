@@ -1,6 +1,6 @@
 # SelectableMenu - 鸿蒙文本选择菜单组件
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)  ![License](https://img.shields.io/badge/License-Apache%202.0-green.svg) ![GitHub Stars](https://img.shields.io/github/stars/iHongRen/SelectableMenu.svg?style=social)
+![Version](https://img.shields.io/badge/version-1.0.0-blue)  ![License](https://img.shields.io/badge/License-Apache%202.0-green.svg) ![GitHub Stars](https://img.shields.io/github/stars/iHongRen/SelectableMenu.svg)
 
 文本选择菜单组件，主要用于聊天对话框中的长按文本选择和操作功能。
 
