@@ -1,6 +1,6 @@
 # SelectableMenu - 鸿蒙文本选择菜单组件
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)  ![License](https://img.shields.io/badge/License-Apache%202.0-green.svg) ![GitHub Stars](https://img.shields.io/github/stars/iHongRen/SelectableMenu.svg)
+![Version](https://img.shields.io/badge/version-1.0.1-blue)  ![License](https://img.shields.io/badge/License-Apache%202.0-green.svg) ![GitHub Stars](https://img.shields.io/github/stars/iHongRen/SelectableMenu.svg)
 
 文本选择菜单组件，主要用于聊天对话框中的长按文本选择和操作功能。
 
@@ -21,7 +21,7 @@ ohpm install @cxy/selecteablemenu
 ```json
 {
   "dependencies": {
-    "@cxy/selecteablemenu": "^1.0.0"
+    "@cxy/selecteablemenu": "^1.0.1"
   }
 }
 ```
@@ -36,8 +36,8 @@ import {
 } from '@cxy/selecteablemenu'
 
 enum MessageType {
-Text = 0,
-Image = 1
+  Text = 0,
+  Image = 1
 }
 
 /**
@@ -152,25 +152,16 @@ class ChatMessage extends SelectableModel {
   }
 }
 
-@
-Entry
-@
-Component
-struct
-Index
-{
-  @
-  State
-  messages: Array<
-  ChatMessage > = []
+@Entry
+@Component
+struct Index {
+  @State messages: Array<ChatMessage> = []
 
-  aboutToAppear():
-  void {
+  aboutToAppear(): void {
     this.initMessages()
   }
 
-  initMessages()
-  {
+  initMessages() {
     const message1 = new ChatMessage(1)
     message1.text = '这是一条可以长按选择的文本消息'
 
@@ -212,22 +203,15 @@ Index
     this.messages.push(message4)
   }
 
-  build()
-  {
-    Navigation()
-    {
-      List
-      ({ space: 12 })
-      {
+  build() {
+    Navigation() {
+      List({ space: 12 }) {
         ForEach(this.messages, (message: ChatMessage) => {
-          ListItem()
-          {
+          ListItem() {
             if (message.type === MessageType.Text) {
               // 文本消息
-              Column()
-              {
-                SelectableText
-                ({
+              Column() {
+                SelectableText({
                   model: message,
                   // text: message.text,
                   fontSize: 16,
@@ -235,25 +219,21 @@ Index
                   caretColor: '#007AFF',
                   selectedBackgroundColor: '#33007AFF',
                   enableDataDetector: true
-                })
-                {
+                }) {
                   Span(message.text) //SelectableText子组件与Text的子组件一致
                 }
               }
-              .
-              backgroundColor('#ffffff')
-                .borderRadius(12)
-                .padding(16)
-                .alignItems(HorizontalAlign.Start)
+              .backgroundColor('#ffffff')
+              .borderRadius(12)
+              .padding(16)
+              .alignItems(HorizontalAlign.Start)
 
             } else if (message.type === MessageType.Image) {
               // 图片消息
-              MenuContainer
-              ({
+              MenuContainer({
                 model: message,
 
-              })
-              {
+              }) {
                 Image(message.imageUrl)
                   .width(150)
               }
@@ -262,24 +242,24 @@ Index
 
         }, (message: ChatMessage) => message.id.toString())
       }
-      .
-      backgroundColor('#f5f5f5')
-        .padding(15)
-        .layoutWeight(1)
+      .backgroundColor('#f5f5f5')
+      .padding(15)
+      .layoutWeight(1)
     }
-    .
-    title('聊天消息')
-      .titleMode(NavigationTitleMode.Mini)
-      .mode(NavigationMode.Stack)
-      .parallelGesture(
-        TapGesture()
-          .onAction((event) => {
-            SelectableModel.onPageTap?.(event)
-          })
-      )
+    .title('聊天消息')
+    .titleMode(NavigationTitleMode.Mini)
+    .mode(NavigationMode.Stack)
+    .parallelGesture(
+      TapGesture()
+        .onAction((event) => {
+          SelectableModel.onPageTap?.(event)
+        })
+    )
   }
 }
 ```
+
+
 
 ## API 参考
 
@@ -287,13 +267,13 @@ Index
 
 可选择文本组件，继承Text组件大部分属性并扩展文本选择功能，增加属性如下：
 
-| 属性             | 类型              | 默认值           | 说明      |
-|----------------|-----------------|---------------|---------|
-| model          | SelectableModel | -             | 数据模型实例  |
+| 属性           | 类型            | 默认值        | 说明           |
+| -------------- | --------------- | ------------- | -------------- |
+| model          | SelectableModel | -             | 数据模型实例   |
 | popupColor     | ResourceColor   | '#e6000000'   | 弹出菜单背景色 |
-| popupRadius    | number          | 5             | 弹出菜单圆角  |
-| placement      | Placement       | Placement.Top | 弹出菜单位置  |
-| menuItemWidth  | number          | 50 (vp)       | 菜单项的宽度  |
+| popupRadius    | number          | 5             | 弹出菜单圆角   |
+| placement      | Placement       | Placement.Top | 弹出菜单位置   |
+| menuItemWidth  | number          | 50 (vp)       | 菜单项的宽度   |
 | maxColumnCount | number          | 5             | 最大的显示列数 |
 
 ### MenuContainer
@@ -304,40 +284,42 @@ Index
 
 数据模型基类，提供选择状态管理和事件回调。
 
-| 属性             | 类型                                                | 默认值   | 说明                                                 |
-|----------------|---------------------------------------------------|-------|----------------------------------------------------|
-| onPageTap      | (event?: BaseGestureEvent) => void                | -     | 页面点击时调用，隐藏菜单                                       |
-| selectionStart | number                                            | -1    | 选择的起始位置                                            |
-| selectionEnd   | number                                            | -1    | 弹出菜单圆角                                             |
-| longpressPopup | boolean                                           | false | 非文本组件长按弹窗是否显示                                      |
-| onDidMenuItem  | (isCopy?: boolean, isSelectAll?: boolean) => void | -     | 菜单项点击时，需调用这个方法。isCopy 是否是复制项点击，isSelectAll 是否是全选点击 |
+| 属性           | 类型                                              | 默认值 | 说明                                                         |
+| -------------- | ------------------------------------------------- | ------ | ------------------------------------------------------------ |
+| onPageTap      | (event?: BaseGestureEvent) => void                | -      | 页面点击时调用，隐藏菜单                                     |
+| selectionStart | number                                            | -1     | 选择的起始位置                                               |
+| selectionEnd   | number                                            | -1     | 弹出菜单圆角                                                 |
+| longpressPopup | boolean                                           | false  | 非文本组件长按弹窗是否显示                                   |
+| onDidMenuItem  | (isCopy?: boolean, isSelectAll?: boolean) => void | -      | 菜单项点击时，需调用这个方法。isCopy 是否是复制项点击，isSelectAll 是否是全选点击 |
 
 需要继承实现的方法：
 
-| 方法         | 返回值                  | 说明       |
-|------------|----------------------|----------|
-| canCopy()  | boolean              | 是否可复制    |
+| 方法       | 返回值               | 说明             |
+| ---------- | -------------------- | ---------------- |
+| canCopy()  | boolean              | 是否可复制       |
 | copyText() | string               | 返回可复制的文本 |
-| getMenus() | SelectableMenuItem[] | 返回菜单项数组  |
+| getMenus() | SelectableMenuItem[] | 返回菜单项数组   |
+
+
 
 # 作者
 
-[@仙银](https://github.com/iHongRen) 鸿蒙相关开源作品
+[@仙银](https://github.com/iHongRen)
+鸿蒙开源作品，欢迎持续关注 [🌟Star](https://github.com/iHongRen/RefreshList) ，[💖赞助](https://ihongren.github.io/donate.html)
 
-1、[hpack](https://github.com/iHongRen/hpack) - 鸿蒙内部测试分发，一键脚本打包工具
+1、[hpack](https://github.com/iHongRen/hpack) - 鸿蒙 HarmonyOS 一键打包上传分发测试工具。
 
-2、[Open-in-DevEco-Studio](https://github.com/iHongRen/Open-in-DevEco-Studio)  - macOS 直接在 Finder 工具栏上，使用
-DevEco-Studio 打开鸿蒙工程。
+2、[Open-in-DevEco-Studio](https://github.com/iHongRen/Open-in-DevEco-Studio)  - macOS 直接在 Finder 工具栏上，使用 DevEco-Studio 打开鸿蒙工程。
 
-3、[cxy-theme](https://github.com/iHongRen/cxy-theme) - DevEco-Studio 绿色背景主题
+3、[cxy-theme](https://github.com/iHongRen/cxy-theme) - DevEco-Studio 绿色护眼背景主题
 
 4、[harmony-udid-tool](https://github.com/iHongRen/harmony-udid-tool) - 简单易用的 HarmonyOS 设备 UDID 获取工具，适用于非开发人员。
 
-5、[SandboxFinder](https://github.com/iHongRen/SandboxFinder) - 鸿蒙沙箱文件浏览器
+5、[SandboxFinder](https://github.com/iHongRen/SandboxFinder) - 鸿蒙沙箱文件浏览器，支持模拟器和真机
 
-6、[WebServer](https://github.com/iHongRen/WebServer) - 鸿蒙轻量级Web服务器框架
+6、[WebServer](https://github.com/iHongRen/WebServer) - 鸿蒙轻量级Web服务器框架，类 Express.js API 风格。
 
 7、[SelectableMenu](https://github.com/iHongRen/SelectableMenu) - 适用于聊天对话框中的文本选择菜单
 
-🌟 如果项目对你有帮助，欢迎持续关注和 Star ，[赞助](https://ihongren.github.io/donate.html)
+8、[RefreshList](https://github.com/iHongRen/RefreshList) - 功能完善的上拉下拉加载组件，支持各种自定义。https://ihongren.github.io/donate.html)
 
