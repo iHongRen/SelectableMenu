@@ -1,6 +1,6 @@
 {
   "name": "@cxy/selecteablemenu",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "鸿蒙文本选择菜单，用于聊天消息文本选择、复制、全选、转发等各种操作",
   "main": "Index.ets",
   "author": "@仙银",

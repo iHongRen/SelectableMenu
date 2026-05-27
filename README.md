@@ -1,6 +1,6 @@
 # SelectableMenu - 鸿蒙文本选择菜单组件
 
-![Version](https://img.shields.io/badge/version-1.0.2-blue)  ![License](https://img.shields.io/badge/License-Apache%202.0-green.svg) ![GitHub Stars](https://img.shields.io/github/stars/iHongRen/SelectableMenu.svg)
+![GitHub release](https://img.shields.io/github/v/release/iHongRen/SelectableMenu)  ![License](https://img.shields.io/badge/License-Apache%202.0-green.svg) ![GitHub Stars](https://img.shields.io/github/stars/iHongRen/SelectableMenu.svg)
 
 文本选择菜单组件，主要用于聊天对话框中的长按文本选择和操作功能。
 
@@ -21,7 +21,7 @@ ohpm install @cxy/selecteablemenu
 ```json
 {
   "dependencies": {
-    "@cxy/selecteablemenu": "^1.0.2"
+    "@cxy/selecteablemenu": "^1.1.0"
   }
 }
 ```
@@ -252,7 +252,7 @@ struct Index {
     .parallelGesture(
       TapGesture()
         .onAction((event) => {
-          SelectableModel.onPageTap?.(event)
+          SelectableModel.onPageTap(event)
         })
     )
   }
@@ -267,14 +267,14 @@ struct Index {
 
 可选择文本组件，继承Text组件大部分属性并扩展文本选择功能，增加属性如下：
 
-| 属性          | 类型              | 默认值           | 说明      |
-|-------------|-----------------|---------------|---------|
-| model       | SelectableModel | -             | 数据模型实例  |
-| popupColor  | ResourceColor   | '#e6000000'   | 弹出菜单背景色 |
-| popupRadius | number          | 5             | 弹出菜单圆角  |
-| placement   | Placement       | Placement.Top | 弹出菜单位置  |
-| menuItemWidth  | number          | 50 (vp) | 菜单项的宽度   |
-| maxColumnCount | number          | 5       | 最大的显示列数 |
+| 属性           | 类型            | 默认值        | 说明           |
+| -------------- | --------------- | ------------- | -------------- |
+| model          | SelectableModel | -             | 数据模型实例   |
+| popupColor     | ResourceColor   | '#e6000000'   | 弹出菜单背景色 |
+| popupRadius    | number          | 5             | 弹出菜单圆角   |
+| placement      | Placement       | Placement.Top | 弹出菜单位置   |
+| menuItemWidth  | number          | 50 (vp)       | 菜单项的宽度   |
+| maxColumnCount | number          | 5             | 最大的显示列数 |
 
 ### MenuContainer
 
@@ -284,23 +284,157 @@ struct Index {
 
 数据模型基类，提供选择状态管理和事件回调。
 
-| 属性             | 类型                                                | 默认值   | 说明                                                 |
-|----------------|---------------------------------------------------|-------|----------------------------------------------------|
-| onPageTap      | (event?: BaseGestureEvent) => void                | -     | 页面点击时调用，隐藏菜单                                       |
-| selectionStart | number                                            | -1    | 选择的起始位置                                            |
-| selectionEnd   | number                                            | -1    | 弹出菜单圆角                                             |
-| longpressPopup | boolean                                           | false | 非文本组件长按弹窗是否显示                                      |
-| onDidMenuItem  | (isCopy?: boolean, isSelectAll?: boolean) => void | -     | 菜单项点击时，需调用这个方法。isCopy 是否是复制项点击，isSelectAll 是否是全选点击 |
+| 属性           | 类型                                              | 默认值 | 说明                                                         |
+| -------------- | ------------------------------------------------- | ------ | ------------------------------------------------------------ |
+| addOnPageTapListener(listener)    | (event?: BaseGestureEvent) => void                | -      | 添加页面点击监听                                             |
+| removeOnPageTapListener(listener) | (event?: BaseGestureEvent) => void                | -      | 移除页面点击监听                                             |
+| onPageTap                         | (event?: BaseGestureEvent) => void                | -      | 页面点击时通知所有监听器，触发菜单隐藏逻辑                  |
+| selectionStart | number                                            | -1     | 选择的起始位置                                               |
+| selectionEnd   | number                                            | -1     | 选择的结束位置                                               |
+| longpressPopup | boolean                                           | false  | 非文本组件长按弹窗是否显示                                   |
+| onDidMenuItem  | (isCopy?: boolean, isSelectAll?: boolean) => void | -      | 菜单项点击时，需调用这个方法。isCopy 是否是复制项点击，isSelectAll 是否是全选点击 |
 
 需要继承实现的方法：
 
-| 方法         | 返回值                  | 说明       |
-|------------|----------------------|----------|
-| canCopy()  | boolean              | 是否可复制    |
+| 方法       | 返回值               | 说明             |
+| ---------- | -------------------- | ---------------- |
+| canCopy()  | boolean              | 是否可复制       |
 | copyText() | string               | 返回可复制的文本 |
-| getMenus() | SelectableMenuItem[] | 返回菜单项数组  |
+| getMenus() | SelectableMenuItem[] | 返回菜单项数组   |
 
+### SelectableConfig
 
+`SelectableModel` 的配置子类，支持通过**回调配置**而非继承使用。适合已有数据类不想或不能继承 `SelectableModel` 的场景。
+
+| 属性                  | 类型                                                              | 默认值 | 说明                                         |
+| --------------------- | ----------------------------------------------------------------- | ------ | -------------------------------------------- |
+| canCopyCallback       | () => boolean                                                     | -      | 消息是否可复制的回调，未设置时返回 `false`   |
+| copyTextCallback      | () => string                                                      | -      | 返回可复制文本的回调，未设置时返回 `''`      |
+| getMenusCallback      | (selectionStart: number, selectionEnd: number) => SelectableMenuItem[] | -      | 返回菜单项数组的回调，接收当前选择范围参数 |
+
+**组合模式示例：**
+
+```typescript
+import {
+  MenuContainer, SelectableMenuItem, SelectableConfig, SelectableText
+} from '@cxy/selecteablemenu'
+
+enum MessageType {
+  Text = 0,
+  Image = 1
+}
+
+// 数据类无需继承 SelectableModel
+@Observed
+class ChatMessage {
+  id: number = 0
+  type: MessageType = MessageType.Text
+  text: string = ''
+  imageUrl: ResourceStr = ''
+  config?: SelectableConfig // 通过组合持有配置实例
+}
+
+@Entry
+@Component
+struct Index {
+  @State messages: Array<ChatMessage> = []
+
+  aboutToAppear(): void {
+    this.initMessages()
+  }
+
+  initMessages() {
+    const message1 = new ChatMessage()
+    message1.id = 1
+    message1.text = '这是一条可以长按选择的文本消息'
+    message1.config = new SelectableConfig()
+    message1.config.canCopyCallback = () => message1.type === MessageType.Text && message1.text.length > 0
+    message1.config.copyTextCallback = () => message1.text
+    message1.config.getMenusCallback = (selectionStart: number, selectionEnd: number) => {
+      const menus: SelectableMenuItem[] = []
+      if (message1.type === MessageType.Text) {
+        menus.push({
+          title: '复制',
+          icon: $r("app.media.copy"),
+          action: () => {
+            // 复制文本到剪贴板
+            message1.config?.onDidMenuItem?.(true)
+          }
+        })
+      }
+      if (selectionStart >= 0 && selectionEnd > 0 &&
+        selectionEnd - selectionStart < message1.text.length) {
+        menus.push({
+          title: '全选',
+          icon: $r("app.media.edit"),
+          action: () => {
+            message1.config?.onDidMenuItem?.(false, true)
+          }
+        })
+      }
+      menus.push({
+        title: '转发',
+        icon: $r("app.media.forward"),
+        action: () => {
+          message1.config?.onDidMenuItem?.()
+        }
+      })
+      return menus
+    }
+
+    this.messages.push(message1)
+  }
+
+  build() {
+    Navigation() {
+      List({ space: 12 }) {
+        ForEach(this.messages, (message: ChatMessage) => {
+          ListItem() {
+            if (message.type === MessageType.Text) {
+              Column() {
+                SelectableText({
+                  model: message.config!, // 传入 config 实例
+                  fontSize: 16,
+                  fontColor: '#333333',
+                }) {
+                  Span(message.text)
+                }
+              }
+            }
+          }
+        }, (message: ChatMessage) => message.id.toString())
+      }
+      .parallelGesture(
+        TapGesture()
+          .onAction((event) => {
+            SelectableModel.onPageTap(event)
+          })
+      )
+    }
+  }
+}
+```
+
+**何时选择继承 vs 组合：**
+
+| 模式 | 适用场景 |
+|------|----------|
+| 继承 `SelectableModel` | 新建数据类，代码简洁，可直接在类中访问 `this` |
+| 组合 `SelectableConfig` | 已有数据类不能继承，或需要与多个模型类共存 |
+
+## 破坏性变更
+
+### v1.0.2 → v1.0.3：`onPageTap` API 变更
+
+`onPageTap` 从**可赋值的单回调属性**变更为**多监听器模式**：
+
+| 旧 API | 新 API | 说明 |
+|--------|--------|------|
+| `SelectableModel.onPageTap = handler` | `SelectableModel.addOnPageTapListener(handler)` | 注册监听器 |
+| `SelectableModel.onPageTap = undefined` | `SelectableModel.removeOnPageTapListener(handler)` | 移除监听器 |
+| `SelectableModel.onPageTap?.(event)` | `SelectableModel.onPageTap(event)` | 触发通知 |
+
+旧的单回调模式在多个 `SelectableText` 实例同时存在时会互相覆盖，新模式通过 `Set` 支持多个监听器独立注册与注销，解决了此问题。
 
 # 作者
 
@@ -313,7 +447,7 @@ struct Index {
 
 3、[cxy-theme](https://github.com/iHongRen/cxy-theme) - DevEco-Studio 绿色护眼背景主题
 
-4、[harmony-udid-tool](https://github.com/iHongRen/harmony-udid-tool) - 简单易用的 HarmonyOS 设备 UDID 获取工具，适用于非开发人员。
+4、[harmony-udid-tool](https://github.com/iHongRen/harmony-udid-tool) - 简易易用的 HarmonyOS 设备 UDID 获取工具，适用于非开发人员。
 
 5、[SandboxFinder](https://github.com/iHongRen/SandboxFinder) - 鸿蒙沙箱文件浏览器，支持模拟器和真机
 
@@ -322,4 +456,3 @@ struct Index {
 7、[SelectableMenu](https://github.com/iHongRen/SelectableMenu) - 适用于聊天对话框中的文本选择菜单
 
 8、[RefreshList](https://github.com/iHongRen/RefreshList) - 功能完善的上拉下拉加载组件，支持各种自定义。https://ihongren.github.io/donate.html)
-

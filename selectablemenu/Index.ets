@@ -4,4 +4,6 @@ export { SelectableMenu } from './src/main/ets/SelectableMenu'
 
 export { SelectableModel, SelectableMenuItem } from './src/main/ets/SelectableModel'
 
+export { SelectableConfig } from './src/main/ets/SelectableConfig'
+
 export { MenuContainer } from './src/main/ets/MenuContainer'

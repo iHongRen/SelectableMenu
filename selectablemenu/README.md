@@ -1,6 +1,6 @@
 # SelectableMenu - 鸿蒙文本选择菜单组件
 
-![Version](https://img.shields.io/badge/version-1.0.2-blue)  ![License](https://img.shields.io/badge/License-Apache%202.0-green.svg) ![GitHub Stars](https://img.shields.io/github/stars/iHongRen/SelectableMenu.svg)
+![GitHub release](https://img.shields.io/github/v/release/iHongRen/SelectableMenu)  ![License](https://img.shields.io/badge/License-Apache%202.0-green.svg) ![GitHub Stars](https://img.shields.io/github/stars/iHongRen/SelectableMenu.svg)
 
 文本选择菜单组件，主要用于聊天对话框中的长按文本选择和操作功能。
 
@@ -21,7 +21,7 @@ ohpm install @cxy/selecteablemenu
 ```json
 {
   "dependencies": {
-    "@cxy/selecteablemenu": "^1.0.2"
+    "@cxy/selecteablemenu": "^1.1.0"
   }
 }
 ```
@@ -301,6 +301,126 @@ struct Index {
 | canCopy()  | boolean              | 是否可复制       |
 | copyText() | string               | 返回可复制的文本 |
 | getMenus() | SelectableMenuItem[] | 返回菜单项数组   |
+
+### SelectableConfig
+
+`SelectableModel` 的配置子类，支持通过**回调配置**而非继承使用。适合已有数据类不想或不能继承 `SelectableModel` 的场景。
+
+| 属性                  | 类型                                                              | 默认值 | 说明                                         |
+| --------------------- | ----------------------------------------------------------------- | ------ | -------------------------------------------- |
+| canCopyCallback       | () => boolean                                                     | -      | 消息是否可复制的回调，未设置时返回 `false`   |
+| copyTextCallback      | () => string                                                      | -      | 返回可复制文本的回调，未设置时返回 `''`      |
+| getMenusCallback      | (selectionStart: number, selectionEnd: number) => SelectableMenuItem[] | -      | 返回菜单项数组的回调，接收当前选择范围参数 |
+
+**组合模式示例：**
+
+```typescript
+import {
+  MenuContainer, SelectableMenuItem, SelectableConfig, SelectableText
+} from '@cxy/selecteablemenu'
+
+enum MessageType {
+  Text = 0,
+  Image = 1
+}
+
+// 数据类无需继承 SelectableModel
+@Observed
+class ChatMessage {
+  id: number = 0
+  type: MessageType = MessageType.Text
+  text: string = ''
+  imageUrl: ResourceStr = ''
+  config?: SelectableConfig // 通过组合持有配置实例
+}
+
+@Entry
+@Component
+struct Index {
+  @State messages: Array<ChatMessage> = []
+
+  aboutToAppear(): void {
+    this.initMessages()
+  }
+
+  initMessages() {
+    const message1 = new ChatMessage()
+    message1.id = 1
+    message1.text = '这是一条可以长按选择的文本消息'
+    message1.config = new SelectableConfig()
+    message1.config.canCopyCallback = () => message1.type === MessageType.Text && message1.text.length > 0
+    message1.config.copyTextCallback = () => message1.text
+    message1.config.getMenusCallback = (selectionStart: number, selectionEnd: number) => {
+      const menus: SelectableMenuItem[] = []
+      if (message1.type === MessageType.Text) {
+        menus.push({
+          title: '复制',
+          icon: $r("app.media.copy"),
+          action: () => {
+            // 复制文本到剪贴板
+            message1.config?.onDidMenuItem?.(true)
+          }
+        })
+      }
+      if (selectionStart >= 0 && selectionEnd > 0 &&
+        selectionEnd - selectionStart < message1.text.length) {
+        menus.push({
+          title: '全选',
+          icon: $r("app.media.edit"),
+          action: () => {
+            message1.config?.onDidMenuItem?.(false, true)
+          }
+        })
+      }
+      menus.push({
+        title: '转发',
+        icon: $r("app.media.forward"),
+        action: () => {
+          message1.config?.onDidMenuItem?.()
+        }
+      })
+      return menus
+    }
+
+    this.messages.push(message1)
+  }
+
+  build() {
+    Navigation() {
+      List({ space: 12 }) {
+        ForEach(this.messages, (message: ChatMessage) => {
+          ListItem() {
+            if (message.type === MessageType.Text) {
+              Column() {
+                SelectableText({
+                  model: message.config!, // 传入 config 实例
+                  fontSize: 16,
+                  fontColor: '#333333',
+                }) {
+                  Span(message.text)
+                }
+              }
+            }
+          }
+        }, (message: ChatMessage) => message.id.toString())
+      }
+      .parallelGesture(
+        TapGesture()
+          .onAction((event) => {
+            SelectableModel.onPageTap(event)
+          })
+      )
+    }
+  }
+}
+```
+
+**何时选择继承 vs 组合：**
+
+| 模式 | 适用场景 |
+|------|----------|
+| 继承 `SelectableModel` | 新建数据类，代码简洁，可直接在类中访问 `this` |
+| 组合 `SelectableConfig` | 已有数据类不能继承，或需要与多个模型类共存 |
 
 ## 破坏性变更
 
