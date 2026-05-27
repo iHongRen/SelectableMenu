@@ -252,7 +252,7 @@ struct Index {
     .parallelGesture(
       TapGesture()
         .onAction((event) => {
-          SelectableModel.onPageTap?.(event)
+          SelectableModel.onPageTap(event)
         })
     )
   }
@@ -286,9 +286,11 @@ struct Index {
 
 | 属性           | 类型                                              | 默认值 | 说明                                                         |
 | -------------- | ------------------------------------------------- | ------ | ------------------------------------------------------------ |
-| onPageTap      | (event?: BaseGestureEvent) => void                | -      | 页面点击时调用，隐藏菜单                                     |
+| addOnPageTapListener(listener)    | (event?: BaseGestureEvent) => void                | -      | 添加页面点击监听                                             |
+| removeOnPageTapListener(listener) | (event?: BaseGestureEvent) => void                | -      | 移除页面点击监听                                             |
+| onPageTap                         | (event?: BaseGestureEvent) => void                | -      | 页面点击时通知所有监听器，触发菜单隐藏逻辑                  |
 | selectionStart | number                                            | -1     | 选择的起始位置                                               |
-| selectionEnd   | number                                            | -1     | 弹出菜单圆角                                                 |
+| selectionEnd   | number                                            | -1     | 选择的结束位置                                               |
 | longpressPopup | boolean                                           | false  | 非文本组件长按弹窗是否显示                                   |
 | onDidMenuItem  | (isCopy?: boolean, isSelectAll?: boolean) => void | -      | 菜单项点击时，需调用这个方法。isCopy 是否是复制项点击，isSelectAll 是否是全选点击 |
 
@@ -300,7 +302,19 @@ struct Index {
 | copyText() | string               | 返回可复制的文本 |
 | getMenus() | SelectableMenuItem[] | 返回菜单项数组   |
 
+## 破坏性变更
 
+### v1.0.2 → v1.0.3：`onPageTap` API 变更
+
+`onPageTap` 从**可赋值的单回调属性**变更为**多监听器模式**：
+
+| 旧 API | 新 API | 说明 |
+|--------|--------|------|
+| `SelectableModel.onPageTap = handler` | `SelectableModel.addOnPageTapListener(handler)` | 注册监听器 |
+| `SelectableModel.onPageTap = undefined` | `SelectableModel.removeOnPageTapListener(handler)` | 移除监听器 |
+| `SelectableModel.onPageTap?.(event)` | `SelectableModel.onPageTap(event)` | 触发通知 |
+
+旧的单回调模式在多个 `SelectableText` 实例同时存在时会互相覆盖，新模式通过 `Set` 支持多个监听器独立注册与注销，解决了此问题。
 
 # 作者
 
@@ -322,4 +336,3 @@ struct Index {
 7、[SelectableMenu](https://github.com/iHongRen/SelectableMenu) - 适用于聊天对话框中的文本选择菜单
 
 8、[RefreshList](https://github.com/iHongRen/RefreshList) - 功能完善的上拉下拉加载组件，支持各种自定义。https://ihongren.github.io/donate.html)
-

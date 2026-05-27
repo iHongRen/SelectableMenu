@@ -45,7 +45,7 @@ export struct MenuContainer {
       LongPressGesture()
         .onAction((event: GestureEvent) => {
           if (event) {
-            SelectableModel.onPageTap?.()
+            SelectableModel.onPageTap()
             this.model.longpressPopup = true
           }
         })

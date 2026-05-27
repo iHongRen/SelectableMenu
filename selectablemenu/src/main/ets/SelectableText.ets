@@ -62,6 +62,7 @@ export struct SelectableText {
   private timeout: number = 0
   private lastHideTime: number = 0
   private myArea?: Area
+  private pageTapListener?: (event?: BaseGestureEvent) => void
 
   aboutToAppear(): void {
     this.cancelSelect()
@@ -75,6 +76,11 @@ export struct SelectableText {
         }
       }, delay)
     }
+  }
+
+  aboutToDisappear(): void {
+    this.hideMenuPopup()
+    this.unregisterPageTapListener()
   }
 
   cancelSelect() {
@@ -98,20 +104,22 @@ export struct SelectableText {
   }
 
   showMenuPopup() {
-    SelectableModel.onPageTap = (event?: BaseGestureEvent) => {
+    this.unregisterPageTapListener()
+    this.pageTapListener = (event?: BaseGestureEvent) => {
       if (event && this.myArea && this.start >= 0 && this.end >= 0 && event.fingerList?.length > 0) {
         const x = event.fingerList[0].globalX
         const y = event.fingerList[0].globalY
 
         if (!this.isPointInComponent(x, y)) {
           this.cancelSelect()
-          SelectableModel.onPageTap = undefined
+          this.unregisterPageTapListener()
         }
       } else if (!event) {
         this.cancelSelect()
-        SelectableModel.onPageTap = undefined
+        this.unregisterPageTapListener()
       }
     }
+    SelectableModel.addOnPageTapListener(this.pageTapListener)
 
     this.showPopup = true
   }
@@ -120,6 +128,13 @@ export struct SelectableText {
     this.showPopup = false
     clearTimeout(this.timeout)
     this.lastHideTime = new Date().getTime()
+  }
+
+  unregisterPageTapListener() {
+    if (this.pageTapListener) {
+      SelectableModel.removeOnPageTapListener(this.pageTapListener)
+      this.pageTapListener = undefined
+    }
   }
 
   isPointInComponent(x: number, y: number): boolean {
@@ -251,4 +266,3 @@ export struct SelectableText {
     })
   }
 }
-

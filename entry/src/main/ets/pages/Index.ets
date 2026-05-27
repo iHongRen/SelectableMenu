@@ -219,7 +219,7 @@ struct Index {
     .parallelGesture(
       TapGesture()
         .onAction((event) => {
-          SelectableModel.onPageTap?.(event)
+          SelectableModel.onPageTap(event)
         })
     )
   }
