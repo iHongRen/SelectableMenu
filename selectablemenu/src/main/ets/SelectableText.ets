@@ -15,7 +15,6 @@ export struct SelectableText {
   @ObjectLink model: SelectableModel
   @Prop text: string
   @Prop textAlign: TextAlign
-  @Prop textOverflow: TextOverflowOptions
   @Prop maxLines: number
   @Prop lineHeight: number | string | Resource
   @Prop decoration: DecorationStyleInterface
@@ -47,18 +46,21 @@ export struct SelectableText {
   @Prop enableHapticFeedback: boolean
   @Prop caretColor: ResourceColor
   @Prop selectedBackgroundColor: ResourceColor
-  @State textModifier: AttributeModifier<TextAttribute> | undefined = undefined //其他属性或高版本API的可通过它设置
-  controller?: TextController
-  @BuilderParam childComponent: () => void //子组件,可以包含Span、ImageSpan、SymbolSpan和ContainerSpan
   @Prop popupColor: ResourceColor = '#e6000000'
   @Prop popupRadius: number = 5
   @Prop placement: Placement = Placement.Top
   @Prop menuItemWidth: number = 50
   @Prop maxColumnCount: number = 5
+  @BuilderParam childComponent: () => void //子组件,可以包含Span、ImageSpan、SymbolSpan和ContainerSpan
+  @State textModifier: AttributeModifier<TextAttribute> | undefined = undefined //其他属性或高版本API的可通过它设置
+  controller?: TextController
+  /// API 18+
+  @Prop textOverflow: TextOverflowOptions
+  @Prop marqueeOptions: TextMarqueeOptions
   ///////////// 下面的作为私有属性 ////////////////////////////////////////////////////////////
-  @State showPopup: boolean = false
-  @State start: number = -1
-  @State end: number = 0
+  @State private showPopup: boolean = false
+  @State private start: number = -1
+  @State private end: number = 0
   private timeout: number = 0
   private lastHideTime: number = 0
   private myArea?: Area
@@ -162,7 +164,6 @@ export struct SelectableText {
       this.childComponent?.()
     }
     .textAlign(this.textAlign)
-    .textOverflow(this.textOverflow)
     .maxLines(this.maxLines)
     .lineHeight(this.lineHeight)
     .decoration(this.decoration)
@@ -187,11 +188,13 @@ export struct SelectableText {
     .lineSpacing(this.lineSpacing)
     .privacySensitive(this.privacySensitive)
     .lineBreakStrategy(this.lineBreakStrategy)
+    .copyOption(CopyOptions.LocalDevice)
+    .selection(this.start, this.end)
     .enableHapticFeedback(this.enableHapticFeedback)
     .caretColor(this.caretColor)
     .selectedBackgroundColor(this.selectedBackgroundColor)
-    .copyOption(CopyOptions.LocalDevice)
-    .selection(this.start, this.end)
+    .textOverflow(this.textOverflow)
+    .marqueeOptions(this.marqueeOptions)
     .onTextSelectionChange((selectionStart: number, selectionEnd: number) => {
       this.selectChange(selectionStart, selectionEnd)
       this.startTimer()

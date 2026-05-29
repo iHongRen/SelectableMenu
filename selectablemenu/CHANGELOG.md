@@ -5,6 +5,7 @@
 ### Added
 
 - 新增组合模式：`SelectableConfig` 类，支持通过回调配置而非继承使用，适合已有数据类不能继承 `SelectableModel` 的场景
+- API 18+
 
 ## [1.0.2] - 2025-08-26
 
