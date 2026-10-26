@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.1.1] - 2026-10-26
+
+### Fixed
+
+- 修复复制/全选后菜单弹出时机过早的问题，延时 50ms → 150ms
+- 修复选择计时器未正确清除的问题（`clearInterval` → `clearTimeout`）
+
+### Changed
+
+- 适配 API 18+：`textOverflow`、新增 `marqueeOptions` 跑马灯属性
+
 ## [1.1.0] - 2026-05-27
 
 ### Added

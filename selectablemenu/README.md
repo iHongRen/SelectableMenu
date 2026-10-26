@@ -27,7 +27,7 @@ ohpm install @cxy/selecteablemenu
 ```json
 {
   "dependencies": {
-    "@cxy/selecteablemenu": "^1.1.0"
+    "@cxy/selecteablemenu": "^1.1.1"
   }
 }
 ```
@@ -131,6 +131,7 @@ SelectableText({ model: message.config!, fontSize: 16, fontColor: '#333333' }) {
 | placement      | `Placement`       | `Placement.Top` | 弹出菜单位置   |
 | menuItemWidth  | `number`          | `50` (vp)       | 菜单项宽度     |
 | maxColumnCount | `number`          | `5`             | 最大显示列数   |
+| marqueeOptions | `TextMarqueeOptions` | -            | 跑马灯属性（API 18+） |
 
 子组件与 `Text` 一致，支持 `Span`、`ImageSpan`、`SymbolSpan`、`ContainerSpan`。
 
