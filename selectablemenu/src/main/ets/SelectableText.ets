@@ -69,7 +69,7 @@ export struct SelectableText {
   aboutToAppear(): void {
     this.cancelSelect()
     this.model.onDidMenuItem = (isCopy: boolean = false, isSelectAll: boolean = false) => {
-      const delay = isCopy || isSelectAll ? 50 : 0
+      const delay = isCopy || isSelectAll ? 150 : 0
       setTimeout(() => {
         if (isSelectAll) {
           this.selectAll()
@@ -97,7 +97,7 @@ export struct SelectableText {
   }
 
   startTimer() {
-    clearInterval(this.timeout)
+    clearTimeout(this.timeout)
     this.timeout = setTimeout(() => {
       if (this.end - this.start > 0) {
         this.showMenuPopup()
